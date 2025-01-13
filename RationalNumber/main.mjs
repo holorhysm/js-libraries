@@ -107,7 +107,31 @@ const RationalNumber = class {
      * @param {RationalLike} numerator - 分子と分母
      * @return {RationalNumber} - 生成された有理数インスタンス
      * 
-     * @param {number|bigint|string|Object} numerator - 有理数に変換するnumber, bigint, string
+     * @overload
+     * @param {[number]} numerator - 有理数に変換するnumberの入った配列
+     * @return {RationalNumber} - 生成された有理数インスタンス
+     * 
+     * @overload
+     * @param {[bigint]} numerator - 有理数に変換するbigintの入った配列
+     * @return {RationalNumber} - 生成された有理数インスタンス
+     * 
+     * @overload
+     * @param {[`${number}`|`${number}/${number}`]} numerator - 有理数に変換するstringの入った配列
+     * @return {RationalNumber} - 生成された有理数インスタンス
+     * 
+     * @overload
+     * @param {[number, number]} numerator - 分子と分母の入った配列
+     * @return {RationalNumber} - 生成された有理数インスタンス
+     * 
+     * @overload
+     * @param {[bigint, bigint]} numerator - 分子と分母の入った配列
+     * @return {RationalNumber} - 生成された有理数インスタンス
+     * 
+     * @overload
+     * @param {[RationalLike]} numerator - 分子と分母の入った配列
+     * @return {RationalNumber} - 生成された有理数インスタンス
+     * 
+     * @param {number|bigint|string|Object|Array} numerator - 有理数に変換するnumber, bigint, string
      * @param {number|bigint} [denominator] - 分母
      * @throws {Error} - 引数が不正な場合
      */
@@ -164,6 +188,13 @@ const RationalNumber = class {
         else if (arguments.length === 1 && typeof numerator === "object" && "n" in numerator && "d" in numerator && typeof numerator.n === "bigint" && typeof numerator.d === "bigint") {
             this.n = numerator.n;
             this.d = numerator.d;
+        }
+        /** 配列 → スプレッド演算子で広げて試行 */
+        else if (Array.isArray(numerator)) {
+            // @ts-ignore - Array.isArrayっつってんだろ
+            const spread = new RationalNumber(...numerator);
+            this.n = spread.n;
+            this.d = spread.d;
         }
         /** それ以外 → 例外 */
         else {
