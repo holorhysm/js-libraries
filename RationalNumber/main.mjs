@@ -103,7 +103,11 @@ const RationalNumber = class {
      * @param {bigint} denominator - 分母
      * @return {RationalNumber} - 生成された有理数インスタンス
      * 
-     * @param {number|bigint|string} numerator - 有理数に変換するnumber, bigint, string
+     * @overload
+     * @param {RationalLike} numerator - 分子と分母
+     * @return {RationalNumber} - 生成された有理数インスタンス
+     * 
+     * @param {number|bigint|string|Object} numerator - 有理数に変換するnumber, bigint, string
      * @param {number|bigint} [denominator] - 分母
      * @throws {Error} - 引数が不正な場合
      */
@@ -155,6 +159,11 @@ const RationalNumber = class {
         else if (arguments.length === 2 && typeof numerator === "bigint" && typeof denominator === "bigint") {
             this.n = numerator;
             this.d = denominator;
+        }
+        /** bigint型のnとdを持つオブジェクト → そのまま */
+        else if (arguments.length === 1 && typeof numerator === "object" && "n" in numerator && "d" in numerator && typeof numerator.n === "bigint" && typeof numerator.d === "bigint") {
+            this.n = numerator.n;
+            this.d = numerator.d;
         }
         /** それ以外 → 例外 */
         else {
